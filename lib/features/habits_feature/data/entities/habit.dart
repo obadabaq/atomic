@@ -1,4 +1,4 @@
-import 'package:atomic_habits/features/habits_feature/domain/models/habit_model.dart';
+import 'package:atomic/features/habits_feature/domain/models/habit_model.dart';
 
 class Habit extends HabitModel {
   Habit({

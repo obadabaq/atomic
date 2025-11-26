@@ -1,6 +1,4 @@
-import 'package:atomic_habits/core/constants/colors.dart';
-import 'package:atomic_habits/features/habits_feature/domain/models/habit_model.dart';
-import 'package:atomic_habits/features/habits_feature/domain/models/submission_model.dart';
+import 'package:atomic/core/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:text_scroll/text_scroll.dart';

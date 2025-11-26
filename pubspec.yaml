@@ -1,4 +1,4 @@
-name: atomic_habits
+name: atomic
 description: A new Flutter project.
 
 publish_to: 'none'
@@ -11,14 +11,19 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.2
   dartz: ^0.10.1
+  file_picker: ^6.1.1
+  fl_chart: ^0.60.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6
   get_it: ^8.0.1
+  image_picker: ^1.0.7
   intl: ^0.19.0
+  open_filex: ^4.3.4
+  path_provider: ^2.1.2
   shared_preferences: ^2.2.2
   sizer: ^3.0.0
-  text_scroll: ^0.2.0
+  text_scroll: ^0.1.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0

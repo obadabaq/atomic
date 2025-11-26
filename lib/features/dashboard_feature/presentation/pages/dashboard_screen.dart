@@ -1,9 +1,9 @@
-import 'package:atomic_habits/core/constants/colors.dart';
-import 'package:atomic_habits/core/dependency_injection/locator.dart';
-import 'package:atomic_habits/features/dashboard_feature/presentation/widgets/calender_widget.dart';
-import 'package:atomic_habits/features/habits_feature/domain/models/habit_model.dart';
-import 'package:atomic_habits/features/habits_feature/domain/usecases/habit_use_case.dart';
-import 'package:atomic_habits/features/habits_feature/presentation/bloc/habit_bloc.dart';
+import 'package:atomic/core/constants/colors.dart';
+import 'package:atomic/core/dependency_injection/locator.dart';
+import 'package:atomic/features/dashboard_feature/presentation/widgets/calender_widget.dart';
+import 'package:atomic/features/habits_feature/domain/models/habit_model.dart';
+import 'package:atomic/features/habits_feature/domain/usecases/habit_use_case.dart';
+import 'package:atomic/features/habits_feature/presentation/bloc/habit_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';

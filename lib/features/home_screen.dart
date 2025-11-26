@@ -1,6 +1,7 @@
-import 'package:atomic_habits/features/dashboard_feature/presentation/pages/dashboard_screen.dart';
-import 'package:atomic_habits/features/food_feature/presentation/pages/food_screen.dart';
-import 'package:atomic_habits/features/habits_feature/presentation/pages/habits_screen.dart';
+import 'package:atomic/features/food_feature/presentation/pages/food_screen.dart';
+import 'package:atomic/features/habits_feature/presentation/pages/habits_screen.dart';
+import 'package:atomic/features/notes_feature/presentation/pages/notes_screen.dart';
+import 'package:atomic/features/todos_feature/presentation/pages/todos_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,8 +12,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final PageController _pageController = PageController(initialPage: 1);
-  int _pageIndex = 1;
+  final PageController _pageController = PageController(initialPage: 0);
+  int _pageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +21,14 @@ class _HomeScreenState extends State<HomeScreen> {
       body: PageView(
         controller: _pageController,
         children: const [
-          DashBoardScreen(),
-          HabitsScreen(),
+          TodosScreen(),
           FoodScreen(),
+          HabitsScreen(),
+          NotesScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _pageIndex,
         onTap: (value) {
           setState(() {
@@ -39,16 +42,20 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_sharp),
-            label: "Dashboard",
+            icon: Icon(Icons.checklist),
+            label: "Todos",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.food_bank),
+            label: "Food",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: "Habits",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.food_bank),
-            label: "Food",
+            icon: Icon(Icons.note),
+            label: "Notes",
           ),
         ],
       ),

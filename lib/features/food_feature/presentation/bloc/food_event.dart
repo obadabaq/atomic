@@ -4,24 +4,48 @@ abstract class FoodEvent {
   const FoodEvent();
 }
 
-class OnGettingFoodsEvent extends FoodEvent {
-  const OnGettingFoodsEvent();
+// Food List Management Events
+class LoadFoodsEvent extends FoodEvent {
+  const LoadFoodsEvent();
 }
 
-class OnAddingFoodEvent extends FoodEvent {
-  final FoodModel foodModel;
-
-  const OnAddingFoodEvent(this.foodModel);
+class AddFoodEvent extends FoodEvent {
+  final FoodModel food;
+  const AddFoodEvent(this.food);
 }
 
-class OnDeletingFoodEvent extends FoodEvent {
-  final FoodModel foodModel;
-
-  const OnDeletingFoodEvent(this.foodModel);
+class UpdateFoodEvent extends FoodEvent {
+  final FoodModel food;
+  const UpdateFoodEvent(this.food);
 }
 
-class OnSubmittingFoodsEvent extends FoodEvent {
-  final List<FoodModel> submittedFoods;
+class DeleteFoodEvent extends FoodEvent {
+  final int foodId;
+  const DeleteFoodEvent(this.foodId);
+}
 
-  const OnSubmittingFoodsEvent(this.submittedFoods);
+// Today's Tracking Events
+class LoadTodayNutritionEvent extends FoodEvent {
+  const LoadTodayNutritionEvent();
+}
+
+class AddMealEntryEvent extends FoodEvent {
+  final FoodModel food;
+  const AddMealEntryEvent(this.food);
+}
+
+class DeleteMealEntryEvent extends FoodEvent {
+  final int entryId;
+  const DeleteMealEntryEvent(this.entryId);
+}
+
+// Analytics Events
+class LoadAnalyticsEvent extends FoodEvent {
+  final int days;
+  const LoadAnalyticsEvent({this.days = 30});
+}
+
+// Combined event to refresh all data
+class RefreshAllDataEvent extends FoodEvent {
+  const RefreshAllDataEvent();
 }

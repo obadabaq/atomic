@@ -1,7 +1,7 @@
-import 'package:atomic_habits/core/errors/failures.dart';
-import 'package:atomic_habits/core/helpers/functional_types.dart';
-import 'package:atomic_habits/core/helpers/prefs_helper.dart';
-import 'package:atomic_habits/features/habits_feature/domain/models/habit_model.dart';
+import 'package:atomic/core/errors/failures.dart';
+import 'package:atomic/core/helpers/functional_types.dart';
+import 'package:atomic/core/helpers/prefs_helper.dart';
+import 'package:atomic/features/habits_feature/domain/models/habit_model.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class HabitLocalDataSource {

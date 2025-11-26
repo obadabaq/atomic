@@ -1,6 +1,6 @@
-import 'package:atomic_habits/core/abstracts/use_case.dart';
-import 'package:atomic_habits/features/habits_feature/domain/models/habit_model.dart';
-import 'package:atomic_habits/features/habits_feature/domain/usecases/habit_use_case.dart';
+import 'package:atomic/core/abstracts/use_case.dart';
+import 'package:atomic/features/habits_feature/domain/models/habit_model.dart';
+import 'package:atomic/features/habits_feature/domain/usecases/habit_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part "habit_event.dart";

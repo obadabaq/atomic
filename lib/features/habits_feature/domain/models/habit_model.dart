@@ -1,16 +1,23 @@
-import 'package:atomic_habits/features/habits_feature/domain/models/submission_model.dart';
+import 'package:atomic/features/habits_feature/domain/models/submission_model.dart';
+import 'package:atomic/features/habits_feature/domain/models/habit_type.dart';
 
 class HabitModel {
   int? id;
   final String name;
   final String question;
   final List<SubmissionModel> submissions;
+  final HabitType habitType;
+  final bool isPositive;
+  final int? targetCount;
 
   HabitModel({
     this.id,
     required this.name,
     required this.question,
     required this.submissions,
+    this.habitType = HabitType.boolean,
+    this.isPositive = true,
+    this.targetCount,
   });
 
   factory HabitModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +30,11 @@ class HabitModel {
       name: json['name'],
       question: json['question'],
       submissions: tmp,
+      habitType: json['habitType'] != null
+          ? HabitTypeExtension.fromString(json['habitType'])
+          : HabitType.boolean,
+      isPositive: json['isPositive'] ?? true,
+      targetCount: json['targetCount'],
     );
   }
 
@@ -32,6 +44,9 @@ class HabitModel {
       'name': name,
       'question': question,
       'submissions': submissions,
+      'habitType': habitType.name,
+      'isPositive': isPositive,
+      'targetCount': targetCount,
     };
   }
 }
