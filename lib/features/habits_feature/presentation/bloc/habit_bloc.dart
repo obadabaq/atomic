@@ -1,4 +1,5 @@
 import 'package:atomic/core/abstracts/use_case.dart';
+import 'package:atomic/core/helpers/widget_helper.dart';
 import 'package:atomic/features/habits_feature/domain/models/habit_model.dart';
 import 'package:atomic/features/habits_feature/domain/usecases/habit_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,12 +10,17 @@ part "habit_state.dart";
 
 class HabitBloc extends Bloc<HabitEvent, HabitState> {
   final HabitUseCase habitUseCase;
+  final WidgetHelper widgetHelper;
 
-  HabitBloc({required this.habitUseCase}) : super(HabitInitial()) {
+  HabitBloc({
+    required this.habitUseCase,
+    required this.widgetHelper,
+  }) : super(HabitInitial()) {
     on<OnGettingHabitsEvent>(_onGettingHabitsEvent);
     on<OnAddingHabitEvent>(_onAddingHabitsEvent);
     on<OnDeletingHabitEvent>(_onDeletingHabitsEvent);
     on<OnSubmittingHabitsEvent>(_onSubmittingHabitsEvent);
+    on<OnReorderingHabitsEvent>(_onReorderingHabitsEvent);
   }
 
   _onGettingHabitsEvent(
@@ -26,6 +32,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       emitter(ErrorGetHabitsState(l.error));
     }, (r) {
       emitter(SuccessGetHabitsState(r));
+      // Update widget after successfully fetching habits
+      widgetHelper.updateHabitsWidget();
     });
   }
 
@@ -36,6 +44,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       emitter(ErrorGetHabitsState(l.error));
     }, (r) {
       emitter(SuccessGetHabitsState(r));
+      // Update widget after adding habit
+      widgetHelper.updateHabitsWidget();
     });
   }
 
@@ -46,6 +56,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       emitter(ErrorGetHabitsState(l.error));
     }, (r) {
       emitter(SuccessGetHabitsState(r));
+      // Update widget after deleting habit
+      widgetHelper.updateHabitsWidget();
     });
   }
 
@@ -56,6 +68,20 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       emitter(ErrorSubmitHabitsState(l.error));
     }, (r) {
       emitter(SuccessSubmitHabitsState(r));
+      // Update widget after submitting habits (most important for widget sync)
+      widgetHelper.updateHabitsWidget();
+    });
+  }
+
+  _onReorderingHabitsEvent(
+      OnReorderingHabitsEvent event, Emitter<HabitState> emitter) async {
+    final result = await habitUseCase.reorderHabits(event.reorderedHabits);
+    result.fold((l) {
+      emitter(ErrorGetHabitsState(l.error));
+    }, (r) {
+      emitter(SuccessGetHabitsState(r));
+      // Update widget after reordering
+      widgetHelper.updateHabitsWidget();
     });
   }
 }

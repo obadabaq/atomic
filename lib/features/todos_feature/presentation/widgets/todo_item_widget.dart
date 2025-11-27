@@ -34,7 +34,7 @@ class TodoItemWidget extends StatelessWidget {
         title: Text(
           todo.title,
           style: TextStyle(
-            fontSize: 13.sp,
+            fontSize: 16.sp,
             fontWeight: FontWeight.w600,
             decoration: todo.isCompleted
                 ? TextDecoration.lineThrough
@@ -70,7 +70,7 @@ class TodoItemWidget extends StatelessWidget {
                   ? 'Completed ${DateFormat('MMM d, h:mm a').format(todo.completedAt!)}'
                   : 'Created ${DateFormat('MMM d, h:mm a').format(todo.createdAt)}',
               style: TextStyle(
-                fontSize: 9.sp,
+                fontSize: 10.sp,
                 color: CustomColors.neutralColor.withOpacity(0.7),
               ),
             ),

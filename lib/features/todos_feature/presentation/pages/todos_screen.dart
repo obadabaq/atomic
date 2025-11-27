@@ -1,4 +1,5 @@
 import 'package:atomic/core/constants/colors.dart';
+import 'package:atomic/features/todos_feature/domain/models/todo_model.dart';
 import 'package:atomic/features/todos_feature/presentation/bloc/todo_bloc.dart';
 import 'package:atomic/features/todos_feature/presentation/bloc/todo_event.dart';
 import 'package:atomic/features/todos_feature/presentation/bloc/todo_state.dart';
@@ -100,7 +101,7 @@ class _TodosScreenState extends State<TodosScreen> {
                 if (activeTodos.isNotEmpty) ...[
                   _buildSectionHeader('Active Todos', activeTodos.length),
                   SizedBox(height: 1.h),
-                  ...activeTodos.map((todo) => TodoItemWidget(todo: todo)),
+                  _buildReorderableTodosList(activeTodos, context),
                 ],
                 if (completedTodos.isNotEmpty) ...[
                   if (activeTodos.isNotEmpty) SizedBox(height: 2.h),
@@ -203,6 +204,38 @@ class _TodosScreenState extends State<TodosScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildReorderableTodosList(
+      List<TodoModel> todos, BuildContext context) {
+    // Sort todos by order field
+    final sortedTodos = List<TodoModel>.from(todos)
+      ..sort((a, b) => a.order.compareTo(b.order));
+
+    return ReorderableListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: sortedTodos.length,
+      onReorder: (oldIndex, newIndex) {
+        if (newIndex > oldIndex) {
+          newIndex -= 1;
+        }
+        final item = sortedTodos.removeAt(oldIndex);
+        sortedTodos.insert(newIndex, item);
+
+        // Trigger reorder event
+        context
+            .read<TodoBloc>()
+            .add(OnReorderingTodosEvent(sortedTodos));
+      },
+      itemBuilder: (context, index) {
+        final todo = sortedTodos[index];
+        return Container(
+          key: ValueKey(todo.id),
+          child: TodoItemWidget(todo: todo),
+        );
+      },
     );
   }
 }

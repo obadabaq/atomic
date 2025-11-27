@@ -31,3 +31,9 @@ class OnTogglingTodoCompletionEvent extends TodoEvent {
 
   const OnTogglingTodoCompletionEvent(this.todoId);
 }
+
+class OnReorderingTodosEvent extends TodoEvent {
+  final List<TodoModel> reorderedTodos;
+
+  const OnReorderingTodosEvent(this.reorderedTodos);
+}

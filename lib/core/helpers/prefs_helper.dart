@@ -73,6 +73,20 @@ class PrefsHelper {
     return habits;
   }
 
+  List<HabitModel> reorderHabits(List<HabitModel> reorderedHabits) {
+    // Update the order field for each habit based on its position in the list
+    final habitsWithOrder = reorderedHabits.asMap().entries.map((entry) {
+      return entry.value.copyWith(order: entry.key);
+    }).toList();
+
+    prefs.setString(
+      PrefsKeys.habits,
+      jsonEncode(habitsWithOrder.map((h) => h.toJson()).toList()),
+    );
+
+    return habitsWithOrder;
+  }
+
   /// Food Logic
   List<FoodModel> getFoods() {
     final String? foodsPref = prefs.getString(PrefsKeys.foods);
@@ -345,6 +359,20 @@ class PrefsHelper {
         PrefsKeys.todos, jsonEncode(todos.map((t) => t.toJson()).toList()));
 
     return todos;
+  }
+
+  List<TodoModel> reorderTodos(List<TodoModel> reorderedTodos) {
+    // Update the order field for each todo based on its position in the list
+    final todosWithOrder = reorderedTodos.asMap().entries.map((entry) {
+      return entry.value.copyWith(order: entry.key);
+    }).toList();
+
+    prefs.setString(
+      PrefsKeys.todos,
+      jsonEncode(todosWithOrder.map((t) => t.toJson()).toList()),
+    );
+
+    return todosWithOrder;
   }
 
   /// Notes Logic

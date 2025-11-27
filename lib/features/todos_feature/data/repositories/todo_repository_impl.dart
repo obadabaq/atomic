@@ -33,4 +33,10 @@ class TodoRepositoryImpl extends AbstractTodoRepository {
   FunctionalFuture<Failure, List<TodoModel>> toggleTodoCompletion(int todoId) {
     return _localDataSource.toggleTodoCompletion(todoId);
   }
+
+  @override
+  FunctionalFuture<Failure, List<TodoModel>> reorderTodos(
+      List<TodoModel> reorderedTodos) {
+    return _localDataSource.reorderTodos(reorderedTodos);
+  }
 }

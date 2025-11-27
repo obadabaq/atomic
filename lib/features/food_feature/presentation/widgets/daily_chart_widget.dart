@@ -241,7 +241,22 @@ class _DailyChartWidgetState extends State<DailyChartWidget> {
       if (value > max) max = value;
     }
     // Add 20% padding to max value
-    return max * 1.2;
+    final result = max * 1.2;
+
+    // Ensure minimum value to prevent division by zero in chart
+    // Use different minimums based on metric type
+    if (result == 0) {
+      switch (widget.selectedMacro) {
+        case MacroType.calories:
+          return 100; // Minimum 100 calories
+        case MacroType.protein:
+        case MacroType.carbs:
+        case MacroType.fats:
+          return 50; // Minimum 50g for macros
+      }
+    }
+
+    return result;
   }
 
   Color _getMacroColor() {

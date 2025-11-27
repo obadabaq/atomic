@@ -25,3 +25,9 @@ class OnSubmittingHabitsEvent extends HabitEvent {
 
   const OnSubmittingHabitsEvent(this.submittedHabits);
 }
+
+class OnReorderingHabitsEvent extends HabitEvent {
+  final List<HabitModel> reorderedHabits;
+
+  const OnReorderingHabitsEvent(this.reorderedHabits);
+}

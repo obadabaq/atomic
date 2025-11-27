@@ -31,4 +31,10 @@ class HabitRepositoryImpl extends AbstractHabitRepository {
       List<HabitModel> submittedHabits) async {
     return await _habitLocalDataSource.submitHabits(submittedHabits);
   }
+
+  @override
+  FunctionalFuture<Failure, List<HabitModel>> reorderHabits(
+      List<HabitModel> reorderedHabits) async {
+    return await _habitLocalDataSource.reorderHabits(reorderedHabits);
+  }
 }

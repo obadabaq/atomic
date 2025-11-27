@@ -1,5 +1,6 @@
 import 'package:atomic/core/constants/colors.dart';
 import 'package:atomic/core/dependency_injection/locator.dart';
+import 'package:atomic/core/helpers/widget_helper.dart';
 import 'package:atomic/features/dashboard_feature/presentation/widgets/calender_widget.dart';
 import 'package:atomic/features/habits_feature/domain/models/habit_model.dart';
 import 'package:atomic/features/habits_feature/domain/usecases/habit_use_case.dart';
@@ -16,7 +17,10 @@ class DashBoardScreen extends StatefulWidget {
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
-  final HabitBloc _habitBloc = HabitBloc(habitUseCase: sl<HabitUseCase>());
+  final HabitBloc _habitBloc = HabitBloc(
+    habitUseCase: sl<HabitUseCase>(),
+    widgetHelper: sl<WidgetHelper>(),
+  );
   late ThemeData theme;
   List<HabitModel> habits = [];
   bool _isWeekView = true;

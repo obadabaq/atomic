@@ -5,7 +5,6 @@ import 'package:atomic/features/dashboard_feature/presentation/widgets/calender_
 import 'package:atomic/features/habits_feature/domain/models/habit_model.dart';
 import 'package:atomic/features/habits_feature/domain/models/submission_model.dart';
 import 'package:atomic/features/habits_feature/domain/models/habit_type.dart';
-import 'package:atomic/features/habits_feature/domain/usecases/habit_use_case.dart';
 import 'package:atomic/features/habits_feature/presentation/bloc/habit_bloc.dart';
 import 'package:atomic/features/habits_feature/presentation/widgets/habit_card.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +24,11 @@ class _HabitsScreenState extends State<HabitsScreen>
   late ThemeData theme;
   late String date;
   late TabController _tabController;
+  late DateTime selectedDate;
 
-  final HabitBloc _habitBloc = HabitBloc(habitUseCase: sl<HabitUseCase>());
+  final HabitBloc _habitBloc = sl<HabitBloc>();
   List<HabitModel> habits = [];
-  Map<int, bool> _habitViewModes = {}; // true = week view, false = month view
+  final Map<int, bool> _habitViewModes = {}; // true = week view, false = month view
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
@@ -41,7 +41,8 @@ class _HabitsScreenState extends State<HabitsScreen>
   @override
   void initState() {
     super.initState();
-    date = DateFormat('yMMMMd').format(DateTime.now());
+    selectedDate = DateTime.now();
+    date = DateFormat('yMMMMd').format(selectedDate);
     _tabController = TabController(length: 2, vsync: this);
     getHabits();
   }
@@ -213,60 +214,213 @@ class _HabitsScreenState extends State<HabitsScreen>
   }
 
   Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final isToday = _isSameDay(selectedDate, DateTime.now());
+    final headerTitle = isToday ? "Today's Progress" : "Progress";
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Today's Progress", style: theme.textTheme.headlineLarge),
-            SizedBox(height: 0.5.h),
-            Text(date, style: theme.textTheme.bodySmall),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(headerTitle, style: theme.textTheme.headlineLarge),
+                  SizedBox(height: 0.5.h),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        size: 12.sp,
+                        color: isToday
+                            ? CustomColors.primaryColor
+                            : CustomColors.blackColor,
+                      ),
+                      SizedBox(width: 1.w),
+                      Text(
+                        date,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: isToday
+                              ? CustomColors.primaryColor
+                              : CustomColors.blackColor,
+                          fontWeight:
+                              isToday ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: CustomColors.primaryColor,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: CustomColors.primaryColor.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                onPressed: openAddHabitPopup,
+                icon: Icon(
+                  Icons.add_rounded,
+                  color: CustomColors.whiteColor,
+                  size: 24.sp,
+                ),
+                tooltip: 'Add New Habit',
+              ),
+            ),
           ],
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: CustomColors.primaryColor,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: CustomColors.primaryColor.withOpacity(0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: IconButton(
-            onPressed: openAddHabitPopup,
-            icon: Icon(
-              Icons.add_rounded,
-              color: CustomColors.whiteColor,
-              size: 24.sp,
-            ),
-            tooltip: 'Add New Habit',
-          ),
-        ),
+        SizedBox(height: 2.h),
+        _buildDateNavigation(),
       ],
     );
   }
 
+  Widget _buildDateNavigation() {
+    final isToday = _isSameDay(selectedDate, DateTime.now());
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+      decoration: BoxDecoration(
+        color: CustomColors.accentColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: CustomColors.primaryColor.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: _goToPreviousDay,
+            icon: const Icon(Icons.chevron_left),
+            color: CustomColors.primaryColor,
+            tooltip: 'Previous Day',
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: _showDatePicker,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+                decoration: BoxDecoration(
+                  color: CustomColors.whiteColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.calendar_month,
+                      size: 16.sp,
+                      color: CustomColors.primaryColor,
+                    ),
+                    SizedBox(width: 2.w),
+                    Text(
+                      DateFormat('EEEE, MMM d, y').format(selectedDate),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: CustomColors.blackColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: isToday ? null : _goToNextDay,
+            icon: const Icon(Icons.chevron_right),
+            color: isToday
+                ? Colors.grey.withOpacity(0.3)
+                : CustomColors.primaryColor,
+            tooltip: 'Next Day',
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildHabitGrid() {
-    return GridView.builder(
+    if (habits.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.only(top: 10.h),
+          child: Column(
+            children: [
+              Icon(
+                Icons.track_changes,
+                size: 80.sp,
+                color: Colors.grey[400],
+              ),
+              SizedBox(height: 2.h),
+              Text(
+                'No habits yet',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+              SizedBox(height: 1.h),
+              Text(
+                'Tap + to add your first habit',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey[500],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Sort habits by order field
+    final sortedHabits = List<HabitModel>.from(habits)
+      ..sort((a, b) => a.order.compareTo(b.order));
+
+    return ReorderableListView.builder(
       padding: EdgeInsets.only(top: 4.h),
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.4,
-      ),
       shrinkWrap: true,
-      itemCount: habits.length,
-      itemBuilder: (_, index) {
-        return HabitCard(
-          theme: theme,
-          habitModel: habits[index],
-          submissionModel: getTodaySubmission(habits[index]),
-          onDelete: () => deleteHabit(habits[index]),
-          onToggle: () => autoSubmitHabits(),
+      itemCount: sortedHabits.length,
+      onReorder: (oldIndex, newIndex) {
+        setState(() {
+          if (newIndex > oldIndex) {
+            newIndex -= 1;
+          }
+          final item = sortedHabits.removeAt(oldIndex);
+          sortedHabits.insert(newIndex, item);
+
+          // Update habits list with new order
+          habits = sortedHabits;
+
+          // Trigger reorder event
+          _habitBloc.add(OnReorderingHabitsEvent(sortedHabits));
+        });
+      },
+      itemBuilder: (context, index) {
+        final habit = sortedHabits[index];
+        return Container(
+          key: ValueKey(habit.id),
+          padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+          child: HabitCard(
+            theme: theme,
+            habitModel: habit,
+            submissionModel: getTodaySubmission(habit),
+            onDelete: () => deleteHabit(habit),
+            onToggle: () => autoSubmitHabits(),
+          ),
         );
       },
     );
@@ -538,5 +692,56 @@ class _HabitsScreenState extends State<HabitsScreen>
         return sub;
       },
     );
+  }
+
+  void _showDatePicker() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: CustomColors.primaryColor,
+              onPrimary: CustomColors.whiteColor,
+              onSurface: CustomColors.blackColor,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null && !_isSameDay(pickedDate, selectedDate)) {
+      setState(() {
+        selectedDate = pickedDate;
+        date = DateFormat('yMMMMd').format(selectedDate);
+      });
+    }
+  }
+
+  void _goToPreviousDay() {
+    setState(() {
+      selectedDate = selectedDate.subtract(const Duration(days: 1));
+      date = DateFormat('yMMMMd').format(selectedDate);
+    });
+  }
+
+  void _goToNextDay() {
+    final tomorrow = selectedDate.add(const Duration(days: 1));
+    if (!_isSameDay(tomorrow, DateTime.now().add(const Duration(days: 1)))) {
+      setState(() {
+        selectedDate = tomorrow;
+        date = DateFormat('yMMMMd').format(selectedDate);
+      });
+    }
+  }
+
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 }

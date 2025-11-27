@@ -12,4 +12,7 @@ abstract class AbstractTodoRepository {
   FunctionalFuture<Failure, List<TodoModel>> deleteTodo(int todoId);
 
   FunctionalFuture<Failure, List<TodoModel>> toggleTodoCompletion(int todoId);
+
+  FunctionalFuture<Failure, List<TodoModel>> reorderTodos(
+      List<TodoModel> reorderedTodos);
 }

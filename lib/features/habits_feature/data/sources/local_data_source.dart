@@ -14,6 +14,9 @@ abstract class HabitLocalDataSource {
 
   FunctionalFuture<Failure, List<HabitModel>> submitHabits(
       List<HabitModel> submittedHabits);
+
+  FunctionalFuture<Failure, List<HabitModel>> reorderHabits(
+      List<HabitModel> reorderedHabits);
 }
 
 class HabitLocalDataSourceImpl extends HabitLocalDataSource {
@@ -61,6 +64,17 @@ class HabitLocalDataSourceImpl extends HabitLocalDataSource {
       return Right(habits);
     } catch (e) {
       return Left(DatabaseFailure('Failed to retrieve habits: $e'));
+    }
+  }
+
+  @override
+  FunctionalFuture<Failure, List<HabitModel>> reorderHabits(
+      List<HabitModel> reorderedHabits) async {
+    try {
+      final habits = _prefsHelper.reorderHabits(reorderedHabits);
+      return Right(habits);
+    } catch (e) {
+      return Left(DatabaseFailure('Failed to reorder habits: $e'));
     }
   }
 }

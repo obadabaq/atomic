@@ -27,4 +27,9 @@ class HabitUseCase extends UseCase<List<HabitModel>, NoParams> {
       List<HabitModel> submittedHabits) {
     return _abstractHabitRepository.submitHabits(submittedHabits);
   }
+
+  FunctionalFuture<Failure, List<HabitModel>> reorderHabits(
+      List<HabitModel> reorderedHabits) {
+    return _abstractHabitRepository.reorderHabits(reorderedHabits);
+  }
 }

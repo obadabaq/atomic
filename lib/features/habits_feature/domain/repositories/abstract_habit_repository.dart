@@ -12,4 +12,7 @@ abstract class AbstractHabitRepository {
 
   FunctionalFuture<Failure, List<HabitModel>> submitHabits(
       List<HabitModel> submittedHabits);
+
+  FunctionalFuture<Failure, List<HabitModel>> reorderHabits(
+      List<HabitModel> reorderedHabits);
 }

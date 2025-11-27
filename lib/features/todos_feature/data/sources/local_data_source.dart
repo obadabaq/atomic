@@ -14,6 +14,9 @@ abstract class TodoLocalDataSource {
   FunctionalFuture<Failure, List<TodoModel>> deleteTodo(int todoId);
 
   FunctionalFuture<Failure, List<TodoModel>> toggleTodoCompletion(int todoId);
+
+  FunctionalFuture<Failure, List<TodoModel>> reorderTodos(
+      List<TodoModel> reorderedTodos);
 }
 
 class TodoLocalDataSourceImpl extends TodoLocalDataSource {
@@ -70,6 +73,17 @@ class TodoLocalDataSourceImpl extends TodoLocalDataSource {
       return Right(todos);
     } catch (e) {
       return Left(DatabaseFailure('Failed to toggle todo completion: $e'));
+    }
+  }
+
+  @override
+  FunctionalFuture<Failure, List<TodoModel>> reorderTodos(
+      List<TodoModel> reorderedTodos) async {
+    try {
+      final todos = _prefsHelper.reorderTodos(reorderedTodos);
+      return Right(todos);
+    } catch (e) {
+      return Left(DatabaseFailure('Failed to reorder todos: $e'));
     }
   }
 }

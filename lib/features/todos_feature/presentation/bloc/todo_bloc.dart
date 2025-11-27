@@ -16,6 +16,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     on<OnUpdatingTodoEvent>(_onUpdatingTodoEvent);
     on<OnDeletingTodoEvent>(_onDeletingTodoEvent);
     on<OnTogglingTodoCompletionEvent>(_onTogglingTodoCompletionEvent);
+    on<OnReorderingTodosEvent>(_onReorderingTodosEvent);
   }
 
   // Helper methods for filtered todos
@@ -102,6 +103,18 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       (todos) {
         _cachedTodos = todos;
         emitter(SuccessToggleTodoState(todos));
+      },
+    );
+  }
+
+  Future<void> _onReorderingTodosEvent(
+      OnReorderingTodosEvent event, Emitter<TodoState> emitter) async {
+    final result = await todoUseCase.reorderTodos(event.reorderedTodos);
+    result.fold(
+      (failure) => emitter(ErrorTodoOperationState(failure.error)),
+      (todos) {
+        _cachedTodos = todos;
+        emitter(SuccessGetTodosState(todos));
       },
     );
   }

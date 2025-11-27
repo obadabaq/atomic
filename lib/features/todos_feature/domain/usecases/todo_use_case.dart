@@ -29,4 +29,9 @@ class TodoUseCase extends UseCase<List<TodoModel>, NoParams> {
   FunctionalFuture<Failure, List<TodoModel>> toggleTodoCompletion(int todoId) {
     return _abstractTodoRepository.toggleTodoCompletion(todoId);
   }
+
+  FunctionalFuture<Failure, List<TodoModel>> reorderTodos(
+      List<TodoModel> reorderedTodos) {
+    return _abstractTodoRepository.reorderTodos(reorderedTodos);
+  }
 }
